@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
+# here the database object
 db = SQLAlchemy()
 
 class Author(db.Model):
