@@ -25,6 +25,17 @@ class Book(db.Model):
     publication_year = db.Column(db.String(4))
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'), nullable=False)
 
+    """
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "isbn" : self.isbn,
+            "author_id" : self.author_id,
+            "publication_year" : self.publication_year
+        }
+    """
+
     def __repr__(self):
         return f"<Book {self.title}>"
 
