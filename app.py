@@ -12,9 +12,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-# Create tables ONCE
-#with app.app_context():
-#    db.create_all()
 
 # Uncomment this block the first time to create the tables
 # Then comment it again to avoid re-creating the DB each time
