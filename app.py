@@ -1,6 +1,5 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from data_models import db, Author, Book
+from data_models import db
 import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -22,4 +21,4 @@ Then comment it again to avoid re-creating the DB each time
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host= "0.0.0.0", port = 5000, debug=True)
