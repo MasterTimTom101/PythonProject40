@@ -6,11 +6,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
   </head>
   <body>
-
+    <h2>Library</h2>
     {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
-    </div>
+        <div> <h3>{{ book.title }}</h3>
+        </div>
     {% endfor %}
+
+    <div>
+        <a href="/add_author">Add Author</a> |
+        <a href="/add_book">Add Book</a>
+    </div>
+
+    <form method="GET" action="/">
+        <label>Sort by:</label>
+        <select name="sort" onchange="this.form.submit()">
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+        </select>
+    </form>
+
+    <ul>
+      {% for book in books %}
+          <li>{{ book.title }} by {{ book.author.name }}</li>
+      {% endfor %}
+    </ul>
 
   </body>
 </html>
