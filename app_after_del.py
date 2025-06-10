@@ -49,6 +49,7 @@ def add_book():
 
 @app.route('/')
 def home():
+    # searching is replacing the sorting
     search_query = request.args.get('search')
     if search_query:
         # Filter books by title or isbn
@@ -59,7 +60,7 @@ def home():
     else:
         books = Book.query.all()
 
-    """
+    """ Here was the sorting
     sort = request.args.get('sort', 'title')
     if sort == 'author':
         books = Book.query.join(Author).order_by(Author.name).all()
@@ -68,6 +69,26 @@ def home():
     """
 
     return render_template('home.html', books=books)
+
+
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    author = book.author
+
+    # Deletes a certain book by id
+    db.session.delete(book)
+    db.session.commit()
+
+    # It makes no sense to keep the author if there is no book anymore
+    if not author.books:
+        db.session.delete(author)
+        db.session.commit()
+        flash(f"Book '{book.title}' and author '{author.name}' deleted.")
+    else:
+        flash(f"Book '{book.title}' deleted.")
+
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':
