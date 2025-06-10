@@ -31,5 +31,21 @@
       {% endfor %}
     </ul>
 
+<form method="GET" action="/">
+  <input type="text" name="search" placeholder="Search books..." />
+  <button type="submit">Search</button>
+</form>
+{% if books %}
+  <ul>
+    {% for book in books %}
+      <li>
+        <strong>{{ book.title }}</strong> by {{ book.author.name }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No books found matching your search.</p>
+{% endif %}
+
   </body>
 </html>

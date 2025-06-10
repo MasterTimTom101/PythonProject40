@@ -49,12 +49,26 @@ def add_book():
 
 @app.route('/')
 def home():
+    search_query = request.args.get('search')
+    if search_query:
+        # Filter books by title or isbn
+        books = Book.query.filter(
+            (Book.title.ilike(f"%{search_query}%")) |
+            (Book.isbn.ilike(f"%{search_query}%"))
+        ).all()
+    else:
+        books = Book.query.all()
+
+    """
     sort = request.args.get('sort', 'title')
     if sort == 'author':
         books = Book.query.join(Author).order_by(Author.name).all()
     else:
         books = Book.query.order_by(Book.title).all()
+    """
+
     return render_template('home.html', books=books)
+
 
 if __name__ == '__main__':
     app.run(host= "0.0.0.0", port = 5000, debug=True)
