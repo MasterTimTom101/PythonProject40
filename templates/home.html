@@ -35,19 +35,16 @@
         <p>No books found matching your search.</p>
     {% endif %}
 
-
   <ul>
   {% for book in books %}
     <li>
-      <strong>{{ book.title }}</strong> by {{ book.author_name }}
-
-      <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" style="display:inline;">
-        <button type="submit" onclick="return confirm('Are you sure you want to delete this book?');">Delete Book</button>
-      </form>
+      <strong>{{ book.title }}</strong> by author  {{ book.author.name }}
+        <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this book?');">Delete this Book</button>
+        </form>
     </li>
   {% endfor %}
 </ul>
-
 
   </body>
 </html>
