@@ -82,18 +82,40 @@ def add_book():
     Gives back the page 'add_book.html' and transfers
      the variable 'authors'
     """
+    """
+       Route to add a book only if the ISBN is unique.
+       Renders 'add_book.html' and passes list of authors.
+       """
     authors = Author.query.all()
+
     if request.method == 'POST':
-        title = request.form.get('title')
-        isbn = request.form.get('isbn')
-        publication_year = request.form.get('publication_year')
+        title = request.form.get('title', '').strip()
+        isbn = request.form.get('isbn', '').strip()
+        publication_year = request.form.get('publication_year', '').strip()
         author_id = request.form.get('author_id')
-        new_book = Book(title=title, isbn=isbn, publication_year=publication_year, author_id=author_id)
-        db.session.add(new_book)
-        db.session.commit()
-        flash('Book added successfully!', 'success')
-        return redirect(url_for('add_book'))
+
+        if not title or not isbn or not author_id:
+            flash('Title, ISBN, and Author are required fields.', 'danger')
+            return redirect(url_for('add_book'))
+
+        # Check if isbn is already existing
+        existing_book = Book.query.filter_by(isbn=isbn).first()
+        if existing_book:
+            flash(f'A book with ISBN "{isbn}" already exists.', 'warning')
+        else:
+            new_book = Book(
+                title=title,
+                isbn=isbn,
+                publication_year=publication_year,
+                author_id=author_id
+            )
+            db.session.add(new_book)
+            db.session.commit()
+            flash(f'Book "{title}" added successfully!', 'success')
+            return redirect(url_for('add_book'))
+
     return render_template('add_book.html', authors=authors)
+
 
 @app.route('/book/<int:book_id>/delete', methods=['POST'])
 def delete_book(book_id):
