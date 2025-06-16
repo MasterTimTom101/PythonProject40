@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
 from data_models import db, Author, Book
 import os
+from datetime import datetime
+
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(BASE_DIR, "data", "library.sqlite")
@@ -52,10 +54,6 @@ def add_author():
     """
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
-
-        if not name:
-            flash('Empty author name is not allowed.', 'danger')
-            return redirect(url_for('add_author'))
         # Check if author is already existing
         existing_author = Author.query.filter(
             db.func.lower(Author.name) == name.lower()
