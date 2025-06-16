@@ -32,7 +32,6 @@ def home():
         books = Book.query.join(Author).order_by(Author.name).all()
     if sort == 'title':
         books = Book.query.order_by(Book.title).all()
-
     search_query = request.args.get('search')
     if search_query:
         # Filter books by title
@@ -57,12 +56,10 @@ def add_author():
         if not name:
             flash('Empty author name is not allowed.', 'danger')
             return redirect(url_for('add_author'))
-
-        # Check if author already exists (case-insensitive match)
+        # Check if author is already existing
         existing_author = Author.query.filter(
             db.func.lower(Author.name) == name.lower()
         ).first()
-
         if existing_author:
             flash(f'Author "{name}" already exists.', 'warning')
         else:
@@ -73,31 +70,26 @@ def add_author():
             return redirect(url_for('add_author'))
     return render_template('add_author.html')
 
+
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
     """
     This is the entry route of the 'add_book' page of the
     application app.py
     It shows the input mask to add a book.
+    Adds a book only if the isbn is unique.
     Gives back the page 'add_book.html' and transfers
      the variable 'authors'
     """
-    """
-       Route to add a book only if the ISBN is unique.
-       Renders 'add_book.html' and passes list of authors.
-       """
     authors = Author.query.all()
-
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
         isbn = request.form.get('isbn', '').strip()
         publication_year = request.form.get('publication_year', '').strip()
         author_id = request.form.get('author_id')
-
         if not title or not isbn or not author_id:
             flash('Title, ISBN, and Author are required fields.', 'danger')
             return redirect(url_for('add_book'))
-
         # Check if isbn is already existing
         existing_book = Book.query.filter_by(isbn=isbn).first()
         if existing_book:
@@ -113,7 +105,6 @@ def add_book():
             db.session.commit()
             flash(f'Book "{title}" added successfully!', 'success')
             return redirect(url_for('add_book'))
-
     return render_template('add_book.html', authors=authors)
 
 
@@ -138,8 +129,8 @@ def delete_book(book_id):
         flash(f'Book and author "{author.name}" were deleted successfully!', 'success')
     else:
         flash(f'Book "{book.title}" was deleted successfully!', 'success')
-
     return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
     """
